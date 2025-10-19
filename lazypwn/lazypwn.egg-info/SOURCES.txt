@@ -1,0 +1,7 @@
+lazypwn.py
+setup.py
+lazypwn.egg-info/PKG-INFO
+lazypwn.egg-info/SOURCES.txt
+lazypwn.egg-info/dependency_links.txt
+lazypwn.egg-info/requires.txt
+lazypwn.egg-info/top_level.txt
