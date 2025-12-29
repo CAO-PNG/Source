@@ -86,10 +86,10 @@ if args.get("REMOTE"):
     io = remote("127.0.0.1", 8080)
 else:
     io = process(binary)
-context.terminal = [
-    os.path.expanduser('~/.local/bin/kitty-gdb'),
-    os.path.abspath(binary), 
-    str(io.pid)                
+    context.terminal = [
+        os.path.expanduser('~/.local/bin/kitty-gdb'),
+        os.path.abspath(binary), 
+        str(io.pid)                
     ]
 # ELF加载
 elf = ELF(binary)
