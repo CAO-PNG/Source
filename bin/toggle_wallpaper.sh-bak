@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# ~/bin/toggle_wallpaper.sh
+set -euo pipefail
+
+WP_HDMI="3538114558"
+WP_EDP="3146507587"
+
+# 等 Wayland socket 就绪（解决登录后早启动）
+for _ in {1..80}; do
+  if [[ -n "${XDG_RUNTIME_DIR:-}" && -n "${WAYLAND_DISPLAY:-}" && -S "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}" ]]; then
+    break
+  fi
+  sleep 3
+done
+
+# 软杀旧进程（别用 -9，留给它清理资源）
+pkill -u "$USER" -x linux-wallpaperengine 2>/dev/null || true
+sleep 0.2
+
+exec linux-wallpaperengine \
+  --screen-root HDMI-A-3 "$WP_HDMI" \
+  --screen-root eDP-1 "$WP_EDP"

@@ -74,8 +74,26 @@ main() {
   # 新的exp.py模板
   cat >exp.py <<EOF
 #!/usr/bin/env python3
-from pwn import *
-from LibcSearcher import *
+# pyright: reportWildcardImportFromLibrary=false
+from pwn import (
+    ELF,
+    p64,
+    p32,
+    u32,
+    u64,
+    FileStructure,
+    args,
+    context,
+    flat,
+    process,
+    raw_input,
+    remote,
+    os,
+    gdb,
+    pause,
+    log,
+    sleep,
+)
 
 # 配置
 context(os='linux', arch='amd64', log_level='debug')
@@ -86,15 +104,13 @@ if args.get("REMOTE"):
     io = remote("127.0.0.1", 8080)
 else:
     io = process(binary)
-    context.terminal = [
-        os.path.expanduser('~/.local/bin/kitty-gdb'),
-        os.path.abspath(binary), 
-        str(io.pid)                
-    ]
+    context.terminal = [os.path.expanduser('~/.local/bin/kitty-gdb')]
+
 # ELF加载
 elf = ELF(binary)
-libc = ELF("/usr/lib/libc.so.6")
+libc = elf.libc
 
+# fmt: off
 # [+] ========== 常用函数定义 ========== [+]
 s       = lambda data               : io.send(data)
 sa      = lambda delim, data        : io.sendafter(str(delim), data)
@@ -113,6 +129,7 @@ p       = lambda name,data          : print("{} ======== > {}".format(name,data)
 l64     = lambda                    : u64(io.recvuntil(b"\\x7f")[-6:].ljust(8, b"\\x00"))
 l32     = lambda                    : u32(io.recvuntil(b"\\xf7")[-4:].ljust(4, b"\\x00"))
 l64_no  = lambda                    : u64(io.recv(6).ljust(8, b'\\x00'))
+# fmt: on
 
 def bug():
   gdb.attach(io)
@@ -121,11 +138,11 @@ def bug():
 def P():
   pause()
 
-def pulsh(): 
+def pulsh():
   sleep(0.5)
 #  [+] ========== Exploit 开始 ========== [+]
 def exp():
-    
+
 exp()
 itr()
 EOF
