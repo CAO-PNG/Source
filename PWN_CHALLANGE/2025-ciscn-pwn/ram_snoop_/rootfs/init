@@ -1,0 +1,16 @@
+#!/bin/sh
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs devtmpfs /dev
+
+echo "[*] Welcome to Kernel PWN Environment"
+echo "[*] Starting shell..."
+
+insmod /home/babydev.ko
+chmod 777 /dev/noc /tmp
+cp /proc/kallsyms /tmp/coresysms.txt
+/home/eatFlag &
+
+exec /bin/sh
+# exec su -s /bin/sh ctf
+
